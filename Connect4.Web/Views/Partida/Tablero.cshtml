@@ -1,0 +1,52 @@
+@using Connect4.Web.Models
+@{
+    ViewData["Title"] = "Tablero";
+    var tablero = (char[,])ViewBag.Tablero;
+    var partida = (Partida)ViewBag.Partida;
+    var turnoJugador = partida.TurnoJugador;
+    string simboloTurno = (partida.TurnoJugadorId == partida.Jugador1Id) ? "X" : "O";
+}
+
+<h2>Tablero - Partida @partida.PartidaId</h2>
+
+<p>
+    <strong>Jugador 1 (X):</strong> @partida.Jugador1?.Nombre <br />
+    <strong>Jugador 2 (O):</strong> @partida.Jugador2?.Nombre <br />
+    <strong>Turno actual:</strong> @(turnoJugador?.Nombre ?? "Desconocido") jugando como <strong>@simboloTurno</strong>
+</p>
+
+<table style="border-collapse: collapse; margin-bottom: 20px;">
+    @for (int fila = 5; fila >= 0; fila--)  // Mostrar desde la fila superior (5) a la inferior (0)
+    {
+        <tr>
+            @for (int col = 0; col < 7; col++)
+            {
+                <td style="width: 40px; height: 40px; text-align: center; border: 1px solid black; font-size: 20px;">
+                    @tablero[fila, col]
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<form asp-action="Jugar" method="post">
+    <input type="hidden" name="id" value="@partida.PartidaId" />
+    <label>Columna (A-G):</label>
+    <select name="columna" required>
+        <option value="">--Seleccionar--</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="G">G</option>
+    </select>
+    <button type="submit">Jugar</button>
+</form>
+
+
+@if (TempData["Error"] != null)
+{
+    <p style="color:red;">@TempData["Error"]</p>
+}

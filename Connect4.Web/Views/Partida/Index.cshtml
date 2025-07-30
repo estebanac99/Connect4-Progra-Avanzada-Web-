@@ -9,51 +9,28 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHora)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Resultado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jugador1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jugador2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TurnoJugador)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.FechaHora)</th>
+            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+            <th>@Html.DisplayNameFor(model => model.Resultado)</th>
+            <th>Jugador 1</th>
+            <th>Jugador 2</th>
+            <th>Turno Jugador</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaHora)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Resultado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jugador1.JugadorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jugador2.JugadorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TurnoJugador.JugadorId)
-            </td>
+            <td>@item.FechaHora</td>
+            <td>@item.Estado</td>
+            <td>@item.Resultado</td>
+            <td>@item.Jugador1?.Nombre</td>
+            <td>@item.Jugador2?.Nombre</td>
+            <td>@item.TurnoJugador?.Nombre</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PartidaId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.PartidaId">Details</a> |
