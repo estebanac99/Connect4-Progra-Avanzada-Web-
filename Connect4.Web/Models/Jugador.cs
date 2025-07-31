@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 public class Jugador
 {
+    [Display(Name = "ID")]
     public int JugadorId { get; set; }  // Identificación única
     public string Nombre { get; set; } = string.Empty;
 

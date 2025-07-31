@@ -74,8 +74,8 @@ namespace Connect4.Web.Controllers
             {
                 // Asignación automática de campos
                 partida.FechaHora = DateTime.Now;
-                partida.Estado = "EnCurso";
-                partida.Resultado = "EnCurso";
+                partida.Estado = "En Curso";
+                partida.Resultado = "En Curso";
 
                 _context.Add(partida);
                 await _context.SaveChangesAsync();
