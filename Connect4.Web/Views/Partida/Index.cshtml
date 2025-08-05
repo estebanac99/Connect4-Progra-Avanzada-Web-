@@ -28,13 +28,13 @@
         <tr>
             <td>@item.PartidaId</td>
             <td>@item.FechaHora</td>
-            <td>@item.Estado</td>
-            <td>@item.Resultado</td>
+            <td>@item.EstadoLegible</td>
+            <td>@item.ResultadoLegible</td>
             <td>@item.Jugador1?.Nombre</td>
             <td>@item.Jugador2?.Nombre</td>
             <td>@item.TurnoJugador?.Nombre</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PartidaId">Editar</a> |
+            <td><a asp-action="Tablero" asp-route-id="@item.PartidaId">Jugar</a></td>
+            <td> |
                 <a asp-action="Details" asp-route-id="@item.PartidaId">Detalles</a> |
                 <a asp-action="Delete" asp-route-id="@item.PartidaId">Eliminar</a>
             </td>

@@ -33,6 +33,7 @@ namespace Connect4.Web.Models
                 .WithMany()
                 .HasForeignKey(p => p.TurnoJugadorId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
         }
     }
 }

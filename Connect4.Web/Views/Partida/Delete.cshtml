@@ -33,25 +33,25 @@
             @Html.DisplayNameFor(model => model.Jugador1)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jugador1.JugadorId)
+            @Html.DisplayFor(model => model.Jugador1!.JugadorId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Jugador2)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jugador2.JugadorId)
+            @Html.DisplayFor(model => model.Jugador2!.JugadorId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TurnoJugador)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TurnoJugador.JugadorId)
+            @Html.DisplayFor(model => model.TurnoJugador!.JugadorId)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="PartidaId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Vuelve a la lista</a>
     </form>
 </div>

@@ -48,20 +48,22 @@ namespace Connect4.Web.Controllers
             return View();
         }
 
-        // POST: Jugador/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JugadorId,Nombre,Marcador,Ganadas,Perdidas,Empatadas")] Jugador jugador)
+        public async Task<IActionResult> Create([Bind("Nombre")] Jugador jugador)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(jugador);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(jugador);
+        if (ModelState.IsValid)
+        {
+        // Asignar valores por defecto
+        jugador.Marcador = 0;
+        jugador.Ganadas = 0;
+        jugador.Perdidas = 0;
+        jugador.Empatadas = 0;
+            _context.Add(jugador);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(jugador);
         }
 
         // GET: Jugador/Edit/5
@@ -146,6 +148,48 @@ namespace Connect4.Web.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Jugador/Ranking
+        public async Task<IActionResult> Ranking()
+        {
+            var jugadores = await _context.Jugadores
+            .Include(j => j.PartidasComoJugador1)
+            .Include(j => j.PartidasComoJugador2)
+            .ToListAsync();
+            foreach (var jugador in jugadores)
+            {
+                int ganadas = 0, perdidas = 0, empatadas = 0;
+
+                var todas = jugador.PartidasComoJugador1.Concat(jugador.PartidasComoJugador2).Where(p => p.Estado == "Finalizada");
+
+                foreach (var partida in todas)
+                {
+                    if (partida.Resultado?.StartsWith("Victoria") == true)
+                    {
+                        if (partida.Resultado.Contains(jugador.Nombre))
+                            ganadas++;
+                        else
+                            perdidas++;
+                    }
+                    else if (partida.Resultado == "Empate")
+                    {
+                        empatadas++;
+                    }
+                }
+
+                jugador.Ganadas = ganadas;
+                jugador.Perdidas = perdidas;
+                jugador.Empatadas = empatadas;
+                jugador.Marcador = ganadas - perdidas;
+
+                _context.Update(jugador); // Guardamos cambios
+            }
+
+            await _context.SaveChangesAsync();
+
+            var ranking = jugadores.OrderByDescending(j => j.Marcador).ThenBy(j => j.Nombre).ToList();
+            return View(ranking);
         }
 
         private bool JugadorExists(int id)
