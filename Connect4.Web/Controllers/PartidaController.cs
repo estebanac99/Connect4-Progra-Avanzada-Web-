@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Connect4.Web.Models;
+using System.Text.Json;
 
 namespace Connect4.Web.Controllers
 {
@@ -134,7 +135,6 @@ namespace Connect4.Web.Controllers
 
         public async Task<IActionResult> Tablero(int id)
         {
-            // Obtener partida con movimientos y jugadores relacionados
             var partida = await _context.Partidas
                 .Include(p => p.Movimientos)
                 .Include(p => p.Jugador1)
@@ -145,7 +145,7 @@ namespace Connect4.Web.Controllers
             if (partida == null)
                 return NotFound();
 
-            // Crear matriz 6 filas x 7 columnas
+            // Crear tablero 6x7 vacío
             char[,] tablero = new char[6, 7];
             for (int fila = 0; fila < 6; fila++)
             {
@@ -155,16 +155,25 @@ namespace Connect4.Web.Controllers
                 }
             }
 
-            // Llenar la matriz con los movimientos
             foreach (var mov in partida.Movimientos)
             {
-                int columnaIndice = mov.Columna - 'A'; // Convierte 'A'-'G' a 0-6
-                tablero[mov.Fila, columnaIndice] = mov.JugadorId == partida.Jugador1Id ? 'X' : 'O';
+                int colIdx = mov.Columna - 'A';
+                tablero[mov.Fila, colIdx] = mov.JugadorId == partida.Jugador1Id ? 'X' : 'O';
             }
 
-            // Pasar tablero y partida a la vista
             ViewBag.Tablero = tablero;
             ViewBag.Partida = partida;
+
+            // ✅ Convertir coordenadas ganadoras (si existen) en HashSet
+            if (TempData["CoordenadasGanadoras"] is string json)
+            {
+                var claves = JsonSerializer.Deserialize<List<string>>(json);
+                ViewBag.CoordenadasGanadoras = new HashSet<string>(claves!);
+            }
+            else
+            {
+                ViewBag.CoordenadasGanadoras = new HashSet<string>();
+            }
 
             return View();
         }
@@ -173,88 +182,96 @@ namespace Connect4.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Jugar(int id, char columna)
         {
-        // Buscar partida con jugadores y movimientos
-        var partida = await _context.Partidas
-        .Include(p => p.Movimientos)
-        .Include(p => p.Jugador1)
-        .Include(p => p.Jugador2)
-        .Include(p => p.TurnoJugador)
-        .FirstOrDefaultAsync(p => p.PartidaId == id);
-        
-        // Verificar si existe y no está finalizada
-        if (partida == null || partida.Estado == "Finalizada")
-        {
-            TempData["Error"] = "La partida ya ha finalizado.";
-            return RedirectToAction(nameof(Tablero), new { id });
-        }
-
-        if (columna < 'A' || columna > 'G')
-        {
-            TempData["Error"] = "Columna inválida.";
-            return RedirectToAction(nameof(Tablero), new { id });
-        }
-
-        var movimientosColumna = partida.Movimientos
-            .Where(m => m.Columna == columna)
-            .OrderBy(m => m.Fila)
-            .ToList();
-
-        if (movimientosColumna.Count >= 6)
-        {
-            TempData["Error"] = "La columna está llena.";
-            return RedirectToAction(nameof(Tablero), new { id });
-        }
-
-        int fila = movimientosColumna.Count;
-        int nuevoOrden = partida.Movimientos.Count > 0
-            ? partida.Movimientos.Max(m => m.OrdenTurno) + 1
-            : 1;
-
-        var nuevoMovimiento = new Movimiento
-        {
-            PartidaId = id,
-            JugadorId = partida.TurnoJugadorId,
-            Columna = columna,
-            Fila = fila,
-            OrdenTurno = nuevoOrden,
-            FechaHora = DateTime.Now
-        };
-
-        _context.Movimientos.Add(nuevoMovimiento);
-        await _context.SaveChangesAsync();
-
-        // Volver a cargar los movimientos incluyendo el nuevo
-        partida = await _context.Partidas
+            // Buscar partida con jugadores y movimientos
+            var partida = await _context.Partidas
             .Include(p => p.Movimientos)
             .Include(p => p.Jugador1)
             .Include(p => p.Jugador2)
             .Include(p => p.TurnoJugador)
             .FirstOrDefaultAsync(p => p.PartidaId == id);
 
-        if (VerificarVictoria(partida!, nuevoMovimiento))
-        {
-            partida!.Estado = "Finalizada";
-            partida.Resultado = $"Victoria - {partida.TurnoJugador?.Nombre}";
+            // Verificar si existe y no está finalizada
+            if (partida == null || partida.Estado == "Finalizada")
+            {
+                TempData["Error"] = "La partida ya ha finalizado.";
+                return RedirectToAction(nameof(Tablero), new { id });
+            }
+
+            if (columna < 'A' || columna > 'G')
+            {
+                TempData["Error"] = "Columna inválida.";
+                return RedirectToAction(nameof(Tablero), new { id });
+            }
+
+            var movimientosColumna = partida.Movimientos
+                .Where(m => m.Columna == columna)
+                .OrderBy(m => m.Fila)
+                .ToList();
+
+            if (movimientosColumna.Count >= 6)
+            {
+                TempData["Error"] = "La columna está llena.";
+                return RedirectToAction(nameof(Tablero), new { id });
+            }
+
+            int fila = movimientosColumna.Count;
+            int nuevoOrden = partida.Movimientos.Count > 0
+                ? partida.Movimientos.Max(m => m.OrdenTurno) + 1
+                : 1;
+
+            var nuevoMovimiento = new Movimiento
+            {
+                PartidaId = id,
+                JugadorId = partida.TurnoJugadorId,
+                Columna = columna,
+                Fila = fila,
+                OrdenTurno = nuevoOrden,
+                FechaHora = DateTime.Now
+            };
+
+            _context.Movimientos.Add(nuevoMovimiento);
+            await _context.SaveChangesAsync();
+
+            // Volver a cargar los movimientos incluyendo el nuevo
+            partida = await _context.Partidas
+                .Include(p => p.Movimientos)
+                .Include(p => p.Jugador1)
+                .Include(p => p.Jugador2)
+                .Include(p => p.TurnoJugador)
+                .FirstOrDefaultAsync(p => p.PartidaId == id);
+
+            //Marcar con verde coordenadas ganadoras
+            var coordsGanadoras = ObtenerCoordenadasGanadoras(partida!, nuevoMovimiento);
+            if (coordsGanadoras.Count >= 4)
+            {
+                partida!.Estado = "Finalizada";
+                partida.Resultado = $"Victoria - {partida.TurnoJugador?.Nombre}";
+
+                // Guardar las coordenadas como strings (ej. "3,2") para que la vista pueda leerlas
+                var claves = coordsGanadoras.Select(c => $"{c.fila},{c.col}").ToList();
+                TempData["CoordenadasGanadoras"] = JsonSerializer.Serialize(claves);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Tablero), new { id });
+            }
+
+            // 🔴 Verificar empate después de victoria
+            if (partida!.Movimientos.Count == 42)
+            {
+                partida.Estado = "Finalizada";
+                partida.Resultado = "Empate";
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Tablero), new { id });
+            }
+
+            // Cambiar turno
+            partida.TurnoJugadorId = (partida.TurnoJugadorId == partida.Jugador1Id)
+                ? partida.Jugador2Id
+                : partida.Jugador1Id;
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Tablero), new { id });
-        }
-
-        // 🔴 Verificar empate después de victoria
-        if (partida!.Movimientos.Count == 42)
-        {
-            partida.Estado = "Finalizada";
-            partida.Resultado = "Empate";
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Tablero), new { id });
-        }
-
-        // Cambiar turno
-        partida.TurnoJugadorId = (partida.TurnoJugadorId == partida.Jugador1Id)
-            ? partida.Jugador2Id
-            : partida.Jugador1Id;
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Tablero), new { id });
+ 
         }
 
         private bool PartidaExists(int id)
@@ -322,32 +339,80 @@ namespace Connect4.Web.Controllers
         { 1, 1 }, // Diagonal descendente
         { 1, -1 } // Diagonal ascendente
             };
-        for (int d = 0; d < 4; d++)
-        {
-            int conteo = 1;
-
-            for (int sentido = -1; sentido <= 1; sentido += 2)
+            for (int d = 0; d < 4; d++)
             {
-                int dx = direcciones[d, 0] * sentido;
-                int dy = direcciones[d, 1] * sentido;
+                int conteo = 1;
 
-                int x = fila + dx;
-                int y = columna + dy;
-
-                while (x >= 0 && x < 6 && y >= 0 && y < 7 && tablero[x, y] == simbolo)
+                for (int sentido = -1; sentido <= 1; sentido += 2)
                 {
-                    conteo++;
-                    x += dx;
-                    y += dy;
+                    int dx = direcciones[d, 0] * sentido;
+                    int dy = direcciones[d, 1] * sentido;
+
+                    int x = fila + dx;
+                    int y = columna + dy;
+
+                    while (x >= 0 && x < 6 && y >= 0 && y < 7 && tablero[x, y] == simbolo)
+                    {
+                        conteo++;
+                        x += dx;
+                        y += dy;
+                    }
                 }
+
+                if (conteo >= 4)
+                    return true;
             }
 
-            if (conteo >= 4)
-                return true;
+            return false;
+        }
+        private List<(int fila, int col)> ObtenerCoordenadasGanadoras(Partida partida, Movimiento ultimo)
+        {
+            int[,] direcciones = new int[,] { { 0, 1 }, { 1, 0 }, { 1, 1 }, { 1, -1 } };
+            int filas = 6;
+            int columnas = 7;
+            char[,] tablero = new char[filas, columnas];
+        foreach (var mov in partida.Movimientos)
+        {
+            int col = mov.Columna - 'A';
+            tablero[mov.Fila, col] = mov.JugadorId == partida.Jugador1Id ? 'X' : 'O';
         }
 
-        return false;
+        char simbolo = ultimo.JugadorId == partida.Jugador1Id ? 'X' : 'O';
+        int filaInicial = ultimo.Fila;
+        int colInicial = ultimo.Columna - 'A';
+
+        for (int d = 0; d < 4; d++)
+        {
+            int dx = direcciones[d, 0];
+            int dy = direcciones[d, 1];
+            List<(int fila, int col)> coords = new() { (filaInicial, colInicial) };
+
+            // Hacia adelante
+            int x = filaInicial + dx;
+            int y = colInicial + dy;
+            while (x >= 0 && x < filas && y >= 0 && y < columnas && tablero[x, y] == simbolo)
+            {
+                coords.Add((x, y));
+                x += dx;
+                y += dy;
+            }
+
+            // Hacia atrás
+            x = filaInicial - dx;
+            y = colInicial - dy;
+            while (x >= 0 && x < filas && y >= 0 && y < columnas && tablero[x, y] == simbolo)
+            {
+                coords.Add((x, y));
+                x -= dx;
+                y -= dy;
+            }
+
+            if (coords.Count >= 4)
+                return coords;
         }
-    }
+
+        return new List<(int, int)>();}
+                
+            } 
 }
 

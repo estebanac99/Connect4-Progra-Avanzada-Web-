@@ -4,29 +4,58 @@
     var tablero = (char[,])ViewBag.Tablero;
     var partida = (Partida)ViewBag.Partida;
     var turnoJugador = partida.TurnoJugador;
+    var coordsGanadoras = ViewBag.CoordenadasGanadoras as HashSet<string> ?? new HashSet<string>();
     string simboloTurno = (partida.TurnoJugadorId == partida.Jugador1Id) ? "X" : "O";
 }
 
 <h2>Tablero - Partida @partida.PartidaId</h2>
 
 <p>
-    <strong>Jugador 1 (X):</strong> @partida.Jugador1?.Nombre <br />
-    <strong>Jugador 2 (O):</strong> @partida.Jugador2?.Nombre <br />
-    <strong>Turno actual:</strong> @(turnoJugador?.Nombre ?? "Desconocido") jugando como <strong>@simboloTurno</strong>
+    <strong style="color: blue;">Jugador 1 (X):</strong> <span style="color: blue;">@partida.Jugador1?.Nombre</span> <br />
+    <strong style="color: purple;">Jugador 2 (O):</strong> <span style="color: purple;">@partida.Jugador2?.Nombre</span> <br />
+
+    <strong>Turno actual:</strong>
+    @if (partida.TurnoJugadorId == partida.Jugador1Id)
+    {
+        <span style="color: blue;"><strong>@partida.Jugador1?.Nombre</strong> jugando como <strong>X</strong></span>
+    }
+    else if (partida.TurnoJugadorId == partida.Jugador2Id)
+    {
+        <span style="color: purple;"><strong>@partida.Jugador2?.Nombre</strong> jugando como <strong>O</strong></span>
+    }
+    else
+    {
+        <span><strong>Desconocido</strong></span>
+    }
 </p>
 
 <table style="border-collapse: collapse; margin-bottom: 20px;">
-    @for (int fila = 5; fila >= 0; fila--)  // Mostrar desde la fila superior (5) a la inferior (0)
+    @for (int fila = 5; fila >= 0; fila--)
     {
         <tr>
             @for (int col = 0; col < 7; col++)
             {
-                <td style="width: 40px; height: 40px; text-align: center; border: 1px solid black; font-size: 20px;">
-                    @tablero[fila, col]
+                char ficha = tablero[fila, col];
+                string clave = $"{fila},{col}";
+
+                string colorTexto = ficha == 'X' ? "blue"
+                                  : ficha == 'O' ? "purple"
+                                  : "black";
+
+                string fondo = ficha == 'X' || ficha == 'O' ? "#fff8dc" : "white"; // amarillo tenue
+
+                if (coordsGanadoras.Contains(clave))
+                {
+                    fondo = "lightgreen";
+                }
+
+                <td style="width: 40px; height: 40px; text-align: center; border: 1px solid black; font-size: 20px; color:@colorTexto; background-color:@fondo;">
+                    @ficha
                 </td>
             }
         </tr>
     }
+
     <tr>
         @for (char letra = 'A'; letra <= 'G'; letra++)
         {
