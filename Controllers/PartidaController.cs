@@ -53,7 +53,6 @@ namespace Connect4.Web.Controllers
             var jugadores = new SelectList(_context.Jugadores, "JugadorId", "Nombre");
             ViewData["Jugador1Id"] = jugadores;
             ViewData["Jugador2Id"] = jugadores;
-            ViewData["TurnoJugadorId"] = jugadores;
             return View();
         }
 
@@ -63,7 +62,7 @@ namespace Connect4.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Jugador1Id,Jugador2Id,TurnoJugadorId")] Partida partida)
+        public async Task<IActionResult> Create([Bind("Jugador1Id,Jugador2Id")] Partida partida)
         {
             // Validación: los jugadores no pueden ser el mismo
             if (partida.Jugador1Id == partida.Jugador2Id)
@@ -73,29 +72,24 @@ namespace Connect4.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                // Asignación automática de campos
+                // Asignación automática
                 partida.FechaHora = DateTime.Now;
                 partida.Estado = "EnCurso";
                 partida.Resultado = "EnCurso";
+                partida.TurnoJugadorId = partida.Jugador1Id; // Jugador 1 siempre inicia
 
                 _context.Add(partida);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Tablero", new { id = partida.PartidaId });
             }
 
-            // Recargar los dropdowns si hay error
+            // Recargar dropdowns si hay error
             var jugadores = new SelectList(_context.Jugadores, "JugadorId", "Nombre");
             ViewData["Jugador1Id"] = jugadores;
             ViewData["Jugador2Id"] = jugadores;
-            ViewData["TurnoJugadorId"] = jugadores;
 
             return View(partida);
         }
-
-
-
-
-
 
         // GET: Partida/Delete/5
         public async Task<IActionResult> Delete(int? id)
