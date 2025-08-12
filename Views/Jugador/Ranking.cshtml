@@ -1,0 +1,9 @@
+@model List<Jugador>
+
+@{
+ViewData["Title"] = "Ranking de Jugadores";
+}
+
+<h2>Ranking de Jugadores</h2> <table class="table"> <thead> <tr> <th>Nombre</th> <th>Ganadas</th> <th>Perdidas</th> <th>Empatadas</th> <th>Marcador</th> 
+</tr> </thead> <tbody> @foreach (var jugador in Model) { <tr> <td>@jugador.Nombre</td> <td>@jugador.Ganadas</td> <td>@jugador.Perdidas</td> <td>@jugador.Empatadas</td> 
+<td>@jugador.Marcador</td> </tr> } </tbody> </table>
