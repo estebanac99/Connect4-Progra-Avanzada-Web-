@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Connect4.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c43ff506049565460048cb49a50c827afaf6f1c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+599ec51d25847f462918e0a42a2fa20a8f287c44")]
 [assembly: System.Reflection.AssemblyProductAttribute("Connect4.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Connect4.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
