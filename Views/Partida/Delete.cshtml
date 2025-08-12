@@ -1,0 +1,56 @@
+@model Partida
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Eliminar - Partida ID: @Html.DisplayFor(model => model.PartidaId)</h1>
+
+<h3>¿Seguro que quieres eliminar la partida?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaHora)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaHora)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Resultado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Resultado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Jugador1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Jugador1!.JugadorId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Jugador2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Jugador2!.JugadorId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TurnoJugador)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TurnoJugador!.JugadorId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PartidaId" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-info">Vuelve a la lista</a>
+    </form>
+</div>

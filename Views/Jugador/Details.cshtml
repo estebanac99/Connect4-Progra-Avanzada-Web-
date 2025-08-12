@@ -1,0 +1,48 @@
+@model Jugador
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Jugador - ID: @Html.DisplayFor(model => model.JugadorId)</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Marcador)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Marcador)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ganadas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ganadas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Perdidas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Perdidas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Empatadas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Empatadas)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.JugadorId" class="btn btn-warning">Editar</a>
+    <a asp-action="Index" class="btn btn-info">Volver a la lista</a>
+</div>

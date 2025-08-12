@@ -1,0 +1,27 @@
+@model Partida
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles - Partida ID: @Html.DisplayFor(model => model.PartidaId)</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaHora)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaHora)
+        </dd>
+        <dt class="col-sm-2">Estado</dt>
+        <dd class="col-sm-10">@Model.EstadoLegible</dd>
+        <dt class="col-sm-2">Resultado</dt>
+        <dd class="col-sm-10">@Model.ResultadoLegible</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-info">Volver a la lista</a>
+</div>
