@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Jugador
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)] // 🔹 Permite que se inserte manualmente
+    [Range(1, int.MaxValue, ErrorMessage = "El ID debe ser un número entero positivo.")]
     [Display(Name = "ID")]
     public int JugadorId { get; set; }  // Identificación única
     public string Nombre { get; set; } = string.Empty;

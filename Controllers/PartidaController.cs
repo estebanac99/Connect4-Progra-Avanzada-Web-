@@ -158,7 +158,7 @@ namespace Connect4.Web.Controllers
             ViewBag.Tablero = tablero;
             ViewBag.Partida = partida;
 
-            // ✅ Convertir coordenadas ganadoras (si existen) en HashSet
+            // Convertir coordenadas ganadoras (si existen) en HashSet
             if (TempData["CoordenadasGanadoras"] is string json)
             {
                 var claves = JsonSerializer.Deserialize<List<string>>(json);
@@ -249,7 +249,7 @@ namespace Connect4.Web.Controllers
                 return RedirectToAction(nameof(Tablero), new { id });
             }
 
-            // 🔴 Verificar empate después de victoria
+            // Verificar empate después de victoria
             if (partida!.Movimientos.Count == 42)
             {
                 partida.Estado = "Finalizada";

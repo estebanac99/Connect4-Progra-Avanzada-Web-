@@ -48,3 +48,7 @@
         <a asp-action="Index" class="btn btn-info">Vuelve a la lista</a>
     </form>
 </div>
+@if (ViewBag.Error != null)
+{
+    <p style="color: red; font-weight: bold;">@ViewBag.Error</p>
+}

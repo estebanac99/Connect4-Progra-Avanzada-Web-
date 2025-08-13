@@ -33,6 +33,31 @@ namespace Connect4.Web.Models
                 .WithMany()
                 .HasForeignKey(p => p.TurnoJugadorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Para que EF Core que NO genere el ID automáticamente
+            modelBuilder.Entity<Jugador>()
+            .Property(j => j.JugadorId)
+            .ValueGeneratedNever();
+
+            // Seed jugadores
+            modelBuilder.Entity<Jugador>().HasData(
+                new Jugador { JugadorId = 1, Nombre = "Alice" },
+                new Jugador { JugadorId = 2, Nombre = "Bob" }
+            );
+
+            // Seed partidas (depende de los jugadores)
+            modelBuilder.Entity<Partida>().HasData(
+                new Partida
+                {
+                    PartidaId = 1,
+                    Jugador1Id = 1,
+                    Jugador2Id = 2,
+                    TurnoJugadorId = 1,
+                    Estado = "EnCurso",
+                    Resultado = "EnCurso",
+                    FechaHora = new DateTime(2025, 8, 13, 12, 0, 0) // valor fijo
+                }
+            );   
             
         }
     }

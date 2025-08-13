@@ -50,20 +50,26 @@ namespace Connect4.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre")] Jugador jugador)
+        public async Task<IActionResult> Create([Bind("JugadorId,Nombre")] Jugador jugador)
         {
-        if (ModelState.IsValid)
-        {
-        // Asignar valores por defecto
-        jugador.Marcador = 0;
-        jugador.Ganadas = 0;
-        jugador.Perdidas = 0;
-        jugador.Empatadas = 0;
-            _context.Add(jugador);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(jugador);
+            if (_context.Jugadores.Any(j => j.JugadorId == jugador.JugadorId))
+            {
+                ModelState.AddModelError("JugadorId", "Ese ID ya está en uso por otro jugador.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                jugador.Marcador = 0;
+                jugador.Ganadas = 0;
+                jugador.Perdidas = 0;
+                jugador.Empatadas = 0;
+
+                _context.Add(jugador);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(jugador);
         }
 
         // GET: Jugador/Edit/5
@@ -83,11 +89,9 @@ namespace Connect4.Web.Controllers
         }
 
         // POST: Jugador/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("JugadorId,Nombre,Marcador,Ganadas,Perdidas,Empatadas")] Jugador jugador)
+        public async Task<IActionResult> Edit(int id, [Bind("JugadorId,Nombre")] Jugador jugador)
         {
             if (id != jugador.JugadorId)
             {
@@ -141,11 +145,17 @@ namespace Connect4.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var jugador = await _context.Jugadores.FindAsync(id);
-            if (jugador != null)
+
+            bool estaEnPartida = await _context.Partidas
+                .AnyAsync(p => p.Jugador1Id == id || p.Jugador2Id == id);
+
+            if (estaEnPartida)
             {
-                _context.Jugadores.Remove(jugador);
+                ViewBag.Error = "No puedes eliminar este jugador porque está asociado a una o más partidas.";
+                return View(jugador); 
             }
 
+            _context.Jugadores.Remove(jugador!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

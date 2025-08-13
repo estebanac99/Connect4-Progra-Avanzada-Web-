@@ -4,6 +4,7 @@ using Connect4.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Connect4.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250813165626_UpdateJugadorIdManual")]
+    partial class UpdateJugadorIdManual
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,26 +49,6 @@ namespace Connect4.Web.Migrations
                     b.HasKey("JugadorId");
 
                     b.ToTable("Jugadores");
-
-                    b.HasData(
-                        new
-                        {
-                            JugadorId = 1,
-                            Empatadas = 0,
-                            Ganadas = 0,
-                            Marcador = 0,
-                            Nombre = "Alice",
-                            Perdidas = 0
-                        },
-                        new
-                        {
-                            JugadorId = 2,
-                            Empatadas = 0,
-                            Ganadas = 0,
-                            Marcador = 0,
-                            Nombre = "Bob",
-                            Perdidas = 0
-                        });
                 });
 
             modelBuilder.Entity("Movimiento", b =>
@@ -141,18 +124,6 @@ namespace Connect4.Web.Migrations
                     b.HasIndex("TurnoJugadorId");
 
                     b.ToTable("Partidas");
-
-                    b.HasData(
-                        new
-                        {
-                            PartidaId = 1,
-                            Estado = "EnCurso",
-                            FechaHora = new DateTime(2025, 8, 13, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            Jugador1Id = 1,
-                            Jugador2Id = 2,
-                            Resultado = "EnCurso",
-                            TurnoJugadorId = 1
-                        });
                 });
 
             modelBuilder.Entity("Movimiento", b =>
