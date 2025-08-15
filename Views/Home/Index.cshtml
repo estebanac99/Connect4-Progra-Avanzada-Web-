@@ -3,22 +3,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Connect4</h1>
-<div class="text-center mt-5">
-    <p>
-        <a asp-controller="Partida" asp-action="Create" class="btn btn-outline-success btn-lg btn-block">🎮 Jugar</a>
-    </p>
-    <p>
-        <a asp-controller="Jugador" asp-action="Index" class="btn btn-outline-primary btn-lg btn-block">👥 Jugadores</a>
-    </p>
-    <p>
-        <a asp-controller="Partida" asp-action="Index" class="btn btn-outline-warning btn-lg btn-block">📜 Partidas</a>
-    </p>
-    <p>
-        <a asp-controller="Jugador" asp-action="Ranking" class="btn btn-outline-info btn-lg btn-block">🏆 Ranking</a>
-    </p>
-</div>
-    <p>Desarrollado por el grupo 1</portal></a>.</p>
+<div class="home-container">
+    <div class="game-title">
+        <a asp-controller="Home" asp-action="Index" class="title-link">
+            <img src="~/images/gamepad.png" alt="Game Console" class="console-icon">
+            <span>CONNECT 4</span>
+        </a>
+    </div>
 
+    <div class="menu-buttons">
+        <a asp-controller="Partida" asp-action="Create" class="pixel-btn">JUGAR</a>
+        <a asp-controller="Jugador" asp-action="Index" class="pixel-btn">JUGADORES</a>
+        <a asp-controller="Partida" asp-action="Index" class="pixel-btn">PARTIDAS</a>
+        <a asp-controller="Jugador" asp-action="Ranking" class="pixel-btn">RANKING</a>
+    </div>
+
+    <footer class="footer-text">
+        Desarrollado por el grupo 1
+    </footer>
 </div>
