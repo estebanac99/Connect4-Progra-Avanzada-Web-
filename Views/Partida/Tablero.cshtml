@@ -5,109 +5,100 @@
     var partida = (Partida)ViewBag.Partida;
     var turnoJugador = partida.TurnoJugador;
     var coordsGanadoras = ViewBag.CoordenadasGanadoras as HashSet<string> ?? new HashSet<string>();
-    string simboloTurno = (partida.TurnoJugadorId == partida.Jugador1Id) ? "X" : "O";
+    bool esTurnoJ1 = partida.TurnoJugadorId == partida.Jugador1Id;
 }
 
-<h2>Tablero - Partida @partida.PartidaId</h2>
+<div class="game-container">
+    <h1 class="game-title">
+        <img src="~/images/gamepad.png" alt="Game Console" class="console-icon">
+            <span>CONNECT 4</span>
+    </h1>
 
-<p>
-    <strong style="color: blue;">Jugador 1 (X):</strong> <span style="color: blue;">@partida.Jugador1?.Nombre</span> <br />
-    <strong style="color: purple;">Jugador 2 (O):</strong> <span style="color: purple;">@partida.Jugador2?.Nombre</span> <br />
+    <div class="players-info">
+        <div class="player-box player1">
+            <span class="player-label">JUGADOR 1:</span>
+            <span class="player-name">@partida.Jugador1?.Nombre</span>
+        </div>
 
-    <strong>Turno actual:</strong>
-    @if (partida.TurnoJugadorId == partida.Jugador1Id)
-    {
-        <span style="color: blue;"><strong>@partida.Jugador1?.Nombre</strong> jugando como <strong>X</strong></span>
-    }
-    else if (partida.TurnoJugadorId == partida.Jugador2Id)
-    {
-        <span style="color: purple;"><strong>@partida.Jugador2?.Nombre</strong> jugando como <strong>O</strong></span>
-    }
-    else
-    {
-        <span><strong>Desconocido</strong></span>
-    }
-</p>
+        <div class="turn-box">
+            <span class="turn-label">TURNO DE:</span>
+            <span class="turn-name">@(esTurnoJ1 ? partida.Jugador1?.Nombre : partida.Jugador2?.Nombre)</span>
+        </div>
 
-<table style="border-collapse: collapse; margin-bottom: 20px;">
-    @for (int fila = 5; fila >= 0; fila--)
-    {
-        <tr>
-            @for (int col = 0; col < 7; col++)
+        <div class="player-box player2">
+            <span class="player-label">JUGADOR 2:</span>
+            <span class="player-name">@partida.Jugador2?.Nombre</span>
+        </div>
+    </div>
+
+    <div class="board" id="board">
+        @for (int fila = 5; fila >= 0; fila--)
+        {
+            for (int col = 0; col < 7; col++)
             {
                 char ficha = tablero[fila, col];
                 string clave = $"{fila},{col}";
 
-                string colorTexto = ficha == 'X' ? "blue"
-                                  : ficha == 'O' ? "purple"
-                                  : "black";
-
-                string fondo = ficha == 'X' || ficha == 'O' ? "#fff8dc" : "white"; // amarillo tenue
+                string fichaClass = ficha == 'X' ? "cell player1"
+                                  : ficha == 'O' ? "cell player2"
+                                  : "cell";
 
                 if (coordsGanadoras.Contains(clave))
                 {
-                    fondo = "lightgreen";
+                    fichaClass += " winner";
                 }
 
-                <td style="width: 40px; height: 40px; text-align: center; border: 1px solid black; font-size: 20px; color:@colorTexto; background-color:@fondo;">
-                    @ficha
-                </td>
+                <div class="@fichaClass" data-col="@col"></div>
             }
-        </tr>
+        }
+    </div>
+
+    @if (partida.Estado == "Finalizada")
+    {
+        <div class="winner-message">
+            @if (partida.Resultado.StartsWith("Victoria"))
+            {
+                <p>El jugador <strong>@partida.Resultado.Replace("Victoria - ", "")</strong> ha ganado la partida.</p>
+            }
+            else if (partida.Resultado == "Empate")
+            {
+                <p>¡Empate! El tablero está lleno.</p>
+            }
+        </div>
+        <a asp-controller="Partida" asp-action="Index" class="btn-back">
+            <img src="~/images/back.png" alt="Back" class="console-icon">
+            <span>Volver a partidas</span>
+        </a>
     }
 
-    <tr>
-        @for (char letra = 'A'; letra <= 'G'; letra++)
-        {
-            <td style="text-align: center; font-weight: bold;">@letra</td>
-        }
-    </tr>
-</table>
+    <form id="jugarForm" asp-action="Jugar" method="post">
+        <input type="hidden" name="id" value="@partida.PartidaId" />
+        <input type="hidden" id="columnaInput" name="columna" />
+    </form>
 
-@if (partida.Estado == "Finalizada")
-{
-if (partida.Resultado.StartsWith("Victoria"))
-{
-<p style="color: green; font-weight: bold;">
-🎉 El jugador <strong>@partida.Resultado.Replace("Victoria - ", "")</strong> ha ganado la partida.
-</p>
-}
-else if (partida.Resultado == "Empate")
-{
-<p style="color: orange; font-weight: bold;">
-🤝 ¡Empate! El tablero está lleno.
-</p>
-}
-<p>
-    <a asp-controller="Partida" asp-action="Index" class="btn btn-secondary">⬅ Volver a la lista de partidas</a>
-</p>
-}
-else
-{
-<form asp-action="Jugar" method="post">
-<input type="hidden" name="id" value="@partida.PartidaId" />
-<label>Columna (A-G):</label>
-<select name="columna" required>
-<option value="">--Seleccionar--</option>
-<option value="A">A</option>
-<option value="B">B</option>
-<option value="C">C</option>
-<option value="D">D</option>
-<option value="E">E</option>
-<option value="F">F</option>
-<option value="G">G</option>
-</select>
-<button type="submit" class="btn btn-success">Jugar</button>
-</form>
-}
-<br>
-<form asp-action="Reiniciar" method="post" style="margin-top:20px;">
-    <input type="hidden" name="id" value="@partida.PartidaId" />
-    <button type="submit" class="btn btn-warning">🔄 Reiniciar</button>
-</form>
+    <form asp-action="Reiniciar" method="post" class="restart-form">
+        <input type="hidden" name="id" value="@partida.PartidaId" />
+        <button type="submit" class="btn-restart">
+            <img src="~/images/restart.png" alt="Restart" class="console-icon">
+            <span>Reiniciar</span>
+        </button>
+    </form>
 
+    @if (TempData["Error"] != null)
+    {
+        <p class="error-message">@TempData["Error"]</p>
+    }
+</div>
 
-@if (TempData["Error"] != null)
-{
-    <p style="color:red;">@TempData["Error"]</p>
+@section Scripts {
+<script>
+    document.querySelectorAll('.cell').forEach(cell => {
+        cell.addEventListener('click', function () {
+            const col = this.getAttribute('data-col');
+            document.getElementById('columnaInput').value =
+                String.fromCharCode(65 + parseInt(col)); // 0 -> A, 1 -> B...
+            document.getElementById('jugarForm').submit();
+        });
+    });
+</script>
 }

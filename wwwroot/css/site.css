@@ -74,3 +74,103 @@ body {
     margin-top: 50px;
     font-size: 0.9rem;
 }
+
+.game-title {
+    font-size: 2.5rem;
+    color: #ff66b3;
+    text-shadow: 0 0 8px #ff66b3, 0 0 16px #ff99cc;
+}
+
+.players-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 900px;
+}
+
+.player-box {
+    background: rgba(255,255,255,0.2);
+    padding: 15px 20px;
+    border-radius: 15px;
+}
+
+.player1 {
+    background-color: #67c6ff;
+}
+
+.player2 {
+    background-color: #ff85c1;
+}
+
+.turn-box {
+    background: #67c6ff;
+    padding: 15px 25px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(7, 70px);
+    grid-template-rows: repeat(6, 70px);
+    gap: 5px;
+    background: transparent;
+    border-radius: 20px;
+    padding: 15px;
+    width: fit-content; 
+    margin: 20px auto;  
+}
+
+
+.cell {
+    width: 70px;
+    height: 70px;
+    background: transparent;
+    border-radius: 50%;
+    border: 3px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.cell:hover {
+    transform: scale(1.1);
+}
+
+.cell.player1 {
+    background-color: #67c6ff;
+}
+
+.cell.player2 {
+    background-color: #ff85c1;
+}
+
+.cell.winner {
+    box-shadow: 0 0 15px 5px yellow;
+}
+
+.btn-restart, .btn-back {
+    background: #ccc;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: 'PixelFont', sans-serif;
+}
+
+.btn-restart:hover, .btn-back:hover {
+    background: #aaa;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.winner-message {
+    font-size: 1.5rem;
+    color: #ffeb3b;
+    margin-top: 15px;
+}
