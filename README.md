@@ -108,7 +108,7 @@ erDiagram
 1. Clonar el repositorio:
    ```bash
    git clone https://github.com/estebanac99/Connect4-Progra-Avanzada-Web-
-   cd Connect4.Web
+   cd Connect4-Progra-Avanzada-Web-
 2. Crear la base de datos a partir de las migraciones:
    ```bash
    dotnet ef database update
