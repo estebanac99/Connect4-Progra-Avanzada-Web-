@@ -3,19 +3,19 @@
 ## Integrantes
 
 1. Nombre: Esteban Aguilar Chavarría
-Carné: FI19013629  
-Usuario Git: estebanac99  
-Correo Git: eaguilarchavarria@gmail.com  
+-Carné: FI19013629  
+-Usuario Git: estebanac99  
+-Correo Git: eaguilarchavarria@gmail.com  
 
 2. Nombre: Emma Alfaro Vargas  
-Carné: FI22026273  
-Usuario Git: emmalfaro
-Correo Git: emma.alfaro2310@gmail.com 
+-Carné: FI22026273  
+-Usuario Git: emmalfaro
+-Correo Git: emma.alfaro2310@gmail.com 
 
 3. Nombre: Llerym Choi Gonzales   
-Carné: FI23028341  
-Usuario Git: Llerym  
-Correo Git: llerymch25@gmail.com
+-Carné: FI23028341  
+-Usuario Git: Llerym  
+-Correo Git: llerymch25@gmail.com
 
 ---
 
@@ -50,7 +50,7 @@ Correo Git: llerymch25@gmail.com
 
 El proyecto sigue la arquitectura **Modelo-Vista-Controlador (MVC)**:  
 
-- **Modelo**: Representa las entidades 'Jugador", "Partida" y "Movimiento".  
+- **Modelo**: Representa las entidades "Jugador", "Partida" y "Movimiento".  
 - **Vista**: Renderiza la interfaz (archivos .cshtml).  
 - **Controlador**: Gestiona la lógica y comunica modelos con vistas.  
 
