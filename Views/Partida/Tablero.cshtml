@@ -5,13 +5,15 @@
     var partida = (Partida)ViewBag.Partida;
     var turnoJugador = partida.TurnoJugador;
     var coordsGanadoras = ViewBag.CoordenadasGanadoras as HashSet<string> ?? new HashSet<string>();
+
     bool esTurnoJ1 = partida.TurnoJugadorId == partida.Jugador1Id;
+    string turnoClass = esTurnoJ1 ? "player1" : "player2";
 }
 
 <div class="game-container">
     <h1 class="game-title">
         <img src="~/images/gamepad.png" alt="Game Console" class="console-icon">
-            <span>CONNECT 4</span>
+        <span>CONNECT 4</span>
     </h1>
 
     <div class="players-info">
@@ -20,7 +22,7 @@
             <span class="player-name">@partida.Jugador1?.Nombre</span>
         </div>
 
-        <div class="turn-box">
+        <div class="turn-box @turnoClass">
             <span class="turn-label">TURNO DE:</span>
             <span class="turn-name">@(esTurnoJ1 ? partida.Jugador1?.Nombre : partida.Jugador2?.Nombre)</span>
         </div>
