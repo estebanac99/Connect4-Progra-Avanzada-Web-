@@ -89,6 +89,7 @@ erDiagram
     JUGADORES ||--o{ PARTIDAS : juega
     JUGADORES ||--o{ MOVIMIENTOS : realiza
     PARTIDAS ||--o{ MOVIMIENTOS : tiene
+```
 
 **Relaciones principales:**  
 - Un **Jugador** puede participar en múltiples **Partidas** (como Jugador1 o Jugador2).  
