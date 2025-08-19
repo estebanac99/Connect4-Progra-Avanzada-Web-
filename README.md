@@ -1,6 +1,6 @@
 # Repositorio para el proyecto final de Programación Avanzada Web SC-701 - Grupo 1
 
-## 👥 Integrantes
+## Integrantes
 
 - Nombre: Esteban Aguilar Chavarría
   Carné: FI19013629  
@@ -19,7 +19,7 @@
 
 ---
 
-## 🛠 Frameworks y Herramientas Utilizadas
+## Frameworks y Herramientas Utilizadas
 
 - **ASP.NET MVC (.NET Framework 4.8.1)** Framework principal para la arquitectura MVC.  
 - **Entity Framework** ORM para el manejo de base de datos.  
@@ -33,13 +33,13 @@
 
 ---
 
-## 📌 Tipo de Aplicación
+## Tipo de Aplicación
 
 - **MPA (Multi-Page Application)** utilizando **patrón MVC**.  
 
 ---
 
-## 🏛 Arquitectura
+## Arquitectura
 
 El proyecto sigue la arquitectura **Modelo-Vista-Controlador (MVC)**:  
 
@@ -49,10 +49,11 @@ El proyecto sigue la arquitectura **Modelo-Vista-Controlador (MVC)**:
 
 ---
 
-## 🗄 Definición de la Base de Datos
+## Definición de la Base de Datos
 
 La base de datos es **relacional en SQL Server**, con las siguientes tablas y relaciones:
 
+```mermaid
 erDiagram
     direction LR
 
