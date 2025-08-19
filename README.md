@@ -21,15 +21,22 @@ Correo Git: llerymch25@gmail.com
 
 ## Frameworks y Herramientas Utilizadas
 
-- **ASP.NET MVC (.NET Framework 4.8.1)** Framework principal para la arquitectura MVC.  
-- **Entity Framework** ORM para el manejo de base de datos.  
-- **Razor View Engine** Motor de vistas para la integración de C# con HTML.  
-- **C#** Lenguaje backend para controladores, modelos y lógica de negocio.  
-- **JavaScript** Validaciones y mejoras en la interacción del frontend.  
-- **HTML5 y CSS3** Estructura y diseño de las vistas.  
-- **SQL Server** Base de datos relacional utilizada.  
-- **Visual Studio 2022** Entorno de desarrollo integrado (IDE).  
-- **Git y GitHub** Control de versiones y colaboración en equipo.  
+**Plataforma y Lenguaje:**  
+- .NET 8.0
+- C#
+
+**Base de Datos y ORM:**  
+- SQL Server
+- Entity Framework Core 9
+
+**Frontend y Vistas:**  
+- Razor View Engine
+- HTML5, CSS3 y Bootstrap
+- JavaScript y jQuery
+
+**Entorno y Control de Versiones:**  
+- Visual Studio 2022 
+- Git y GitHub 
 
 ---
 
