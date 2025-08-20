@@ -33,6 +33,16 @@
         </div>
     </div>
 
+    <div class="board-container"></div>
+    <!--Encabezado con letras -->
+    <div class="board-header">
+        @for (int col = 0; col < 7; col++)
+        {
+            <div class="header-cell">@((char)('A' + col))</div>
+        }
+    </div>
+
+     <!--Tablero -->
     <div class="board" id="board">
         @for (int fila = 5; fila >= 0; fila--)
         {
